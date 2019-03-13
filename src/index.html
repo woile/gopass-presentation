@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+
+    <title>reveal.js</title>
+
+    <link rel="stylesheet" href="css/reveal.css" />
+    <link rel="stylesheet" href="css/theme/black.css" />
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/zenburn.css" />
+
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.type = "text/css";
+      link.href = window.location.search.match(/print-pdf/gi)
+        ? "css/print/pdf.css"
+        : "css/print/paper.css";
+      document.getElementsByTagName("head")[0].appendChild(link);
+    </script>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section data-markdown>
+          <textarea data-template>
+            ## Gopass
+            Manage your secrets and password
+            <aside class="notes">
+              <p>Left as reference</p>
+            </aside>
+          </textarea>
+        </section>
+
+        <section data-markdown>
+          <textarea data-template>
+              Gopass creates a folder tree, where encrypted files are the leaves.
+
+              ```bash
+              gopass
+              ├── my-company
+              │   └── pepe@my-company.com
+              └── personal
+                  └── pepe@personal.com
+              ```
+          </textarea>
+        </section>
+        <section>
+          <h1>
+            GPG Keys
+          </h1>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+
+              ### List secret keys
+
+              ```bash
+              gpg -k
+              ```
+
+              ### Create new key
+
+              ```bash
+              gpg --full-generate-key
+              ```
+
+          </textarea>
+        </section>
+        <section><h1>Initialize gopass</h1></section>
+        <section data-markdown>
+          <textarea data-template>
+              ### Autocomplete
+
+              ```bash
+              echo "source <(gopass completion bash)" >> ~/.bashrc
+              ```
+
+              ### Start gopass
+
+              ```bash
+              gopass init
+              ```
+              Backup your private key in an encrypted disk.
+          </textarea>
+        </section>
+        <section>
+          <h1>Using gopass</h1>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+
+              ### List passwords
+
+              ```bash
+              gopass ls
+              ```
+
+              ### Creating passwords
+              <sub><sup>default location `~/.password-store/`</sup></sub>
+
+              ```bash
+              gopass insert my-company/willy@email.com
+              ```
+
+          </textarea>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+              ### Generate random pass
+
+              ```bash
+              gopass generate my-company/anothername@rmail.com
+              ```
+
+              ### Search secrets
+
+              ```bash
+              gopass search @email.com
+              ```
+          </textarea>
+        </section>
+
+        <section data-markdown>
+          <textarea data-template>
+              ### Show password in console
+
+              ```bash
+              gopass my-company/willy@email.com
+              ```
+
+              ### Copy password to clipboard
+
+              ```bash
+              gopass -c my-company/willy@email.com
+              ```
+          </textarea>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+              # Using stores
+
+              Stores (AKA mounts) let you group your passwords. Example:
+              `personal`, `company`. Each one can live in a different repository,
+              and you could share `company` with your peers.
+          </textarea>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+              ### Initialize new store
+
+              Creates a new store located at `~/.password-store-my-company`.
+
+              ```bash
+              gopass init --store my-company
+              ```
+
+              ### Add git remote to store
+
+              ```bash
+              gopass git remote add --store my-company origin git@gh.com/Woile/keys.git
+              ```
+
+              ### Clone existing store
+
+              ```bash
+              gopass clone git@gh.com/Woile/keys.git my-company --sync gitcli
+              ```
+          </textarea>
+        </section>
+
+        <section><h1>Synchronization</h1></section>
+        <section data-markdown>
+          <textarea data-template>
+              ### Synchronize with remotes
+
+              ```bash
+              gopass sync
+              ```
+
+              ### Synchronzing a single store
+
+              ```bash
+              gopass sync --store my-company
+              ```
+          </textarea>
+        </section>
+        <section><h1>Team sharing</h1></section>
+        <section data-markdown>
+          <textarea data-template>
+              ## New user
+
+              ### Export public key
+
+              ```bash
+              gpg -a --export willy@email.com > willy.pub.asc
+              ```
+
+              ### Check current recipients
+
+              ```bash
+              gopass recipients
+              ```
+          </textarea>
+        </section>
+
+        <section data-markdown>
+          <textarea data-template>
+              ## Store owner
+
+              ### Add public key into gopass
+              ```bash
+              gpg --import < willy.pub.asc
+              ```
+
+              ```bash
+              gpg --list-keys
+              ```
+
+              ```bash
+              gopass recipients add willy@email.com
+              ```
+          </textarea>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+            Thanks!
+
+            [Cheatsheet](https://woile.github.io/gopass-cheat-sheet/)
+          </textarea>
+        </section>
+      </div>
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.js"></script>
+
+    <script>
+      // More info about config & dependencies:
+      // - https://github.com/hakimel/reveal.js#configuration
+      // - https://github.com/hakimel/reveal.js#dependencies
+      Reveal.initialize({
+        dependencies: [
+          { src: "plugin/markdown/marked.js" },
+          { src: "plugin/markdown/markdown.js" },
+          { src: "plugin/notes/notes.js", async: true },
+          {
+            src: "plugin/highlight/highlight.js",
+            async: true,
+            callback: function() {
+              hljs.initHighlightingOnLoad();
+            }
+          }
+        ]
+      });
+    </script>
+  </body>
+</html>
